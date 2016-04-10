@@ -92,11 +92,11 @@
 
 			forceCalcs.fullRoundMoveSpeedFPS = (baseMoveSpeedFPS / secondsPerTurn) * runMultiplier;  
 			
-			writeLogEntry('Calculated Full Round Move Speed as (base move speed fps / seconds per turn) * run multiplier: (' + baseMoveSpeedFPS + ' / ' + secondsPerTurn + ') * ' + runMultiplier + ' = ' + forceCalcs.fullRoundMoveSpeedFPS); 
+			writeLogEntry('Calculated Base Feet Per Second as (base move speed fps / seconds per turn) * run multiplier: (' + baseMoveSpeedFPS + ' / ' + secondsPerTurn + ') * ' + runMultiplier + ' = ' + forceCalcs.fullRoundMoveSpeedFPS); 
 			
 			forceCalcs.cheetaSprintFPS = forceCalcs.fullRoundMoveSpeedFPS * cheetaSprintMultiplier; //how fast char is going in feet per second if cheeta sprinting
 			
-			writeLogEntry('Calculated Cheetah Sprint FPS as full round move speed fps * cheetah sprint multiplier: ' + forceCalcs.fullRoundMoveSpeedFPS + ' * ' + cheetaSprintMultiplier + ' = ' + forceCalcs.cheetaSprintFPS); 
+			writeLogEntry('Calculated Cheetah Sprint FPS as Base Feet Per Second * cheetah sprint multiplier: ' + forceCalcs.fullRoundMoveSpeedFPS + ' * ' + cheetaSprintMultiplier + ' = ' + forceCalcs.cheetaSprintFPS); 
 			
 			forceCalcs.cheetaSprintLimitFeet = (baseMoveSpeedFPS * cheetaSprintMultiplier); //hard limit on distance travelled given by "move a total distance of up to 10 times your base land speed"
 			
@@ -109,6 +109,7 @@
 			if(limitSprintDistance)
 			{	
 				writeLogEntry('Sprint distance is limited. Applying limit');
+				writeLogEntry('Final distance is either theoretical cheetah sprint distance or cheetah sprint limit, whichever is smaller: ' + forceCalcs.finalDistance);
 				//speed cannot be higher than 10 times base land speed. Use ternary logic to figure out if we have to use the theoretical cap, or the calculated distance
 				forceCalcs.finalDistance = forceCalcs.cheetaSprintCalculatedFeet > forceCalcs.cheetaSprintLimitFeet ? forceCalcs.cheetaSprintLimitFeet : forceCalcs.cheetaSprintCalculatedFeet; // value = [conditional test] ? [value if true] : [value if false]
 			}
@@ -118,8 +119,7 @@
 				forceCalcs.finalDistance = forceCalcs.cheetaSprintCalculatedFeet;
 			}
 			
-			writeLogEntry('Final distance is either theoretical cheetah sprint distance or cheetah sprint limit, whichever is smaller: ' + forceCalcs.finalDistance);
-			
+					
 			//our given speed is still in full turn numbers (6 seconds). So convert it to feet per second
 			forceCalcs.finalFPS = forceCalcs.finalDistance / secondsPerTurn;
 			
@@ -268,7 +268,7 @@
 						<input name="enlargeWeightMultiplier" data-bound="true" type="number">
 					</td>
 					<td>
-						This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by
+						This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by 8
 					</td>
 					<td>
 						<a href="http://www.d20pfsrd.com/magic/all-spells/e/enlarge-person">http://www.d20pfsrd.com/magic/all-spells/e/enlarge-person</a>	
