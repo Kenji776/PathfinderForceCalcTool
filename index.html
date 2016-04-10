@@ -142,9 +142,13 @@
 			
 			var forceCalcs = new Object();
 
-			forceCalcs.fullRoundMoveSpeedFPS = ( (baseMoveSpeedFPS + additionalHasteSpeed) / secondsPerTurn) * runMultiplier;  
+			forceCalcs.baseDistanceFeet = (baseMoveSpeedFPS + additionalHasteSpeed) * runMultiplier;
 			
-			writeLogEntry('Calculated Base Feet Per Second as (base move speed fps + haste speed bonus / seconds per turn) * run multiplier: ((' + baseMoveSpeedFPS + ' + ' + additionalHasteSpeed + ') / ' + secondsPerTurn + ') * ' + runMultiplier + ' = ' + forceCalcs.fullRoundMoveSpeedFPS); 
+			writeLogEntry('Calculated base distance travelled (with haste) as (baseMoveSpeedFPS + additionalHasteSpeed) * runMultiplier: ((' + baseMoveSpeedFPS + ' + ' + additionalHasteSpeed + ') * ' + runMultiplier + ' = ' + forceCalcs.baseDistanceFeet);
+			
+			forceCalcs.fullRoundMoveSpeedFPS = forceCalcs.baseDistanceFeet / secondsPerTurn;  
+			
+			writeLogEntry('Calculated base distance travelled / seconds per turn: ' + forceCalcs.baseDistanceFeet + ' / ' + secondsPerTurn + ' = ' +  forceCalcs.fullRoundMoveSpeedFPS);
 			
 			forceCalcs.cheetaSprintFPS = forceCalcs.fullRoundMoveSpeedFPS * cheetaSprintMultiplier; //how fast char is going in feet per second if cheeta sprinting
 			
@@ -395,6 +399,12 @@
 							<th>Explanation</th>
 						</tr>
 					</thead>
+					<tr>
+						<td><label for="baseDistanceFeet">Base Distance Per Turn</label></td>
+						<td><span class="calculatedValue" name="baseDistanceFeet" data-bound="true"></span></td>
+						<td>Feet</td>
+						<td>How far the character can move in a turn at base speed (with haste added)</td>
+					</tr>					
 					<tr>
 						<td><label for="fullRoundMoveSpeedFPS">Base Feet Per Second</label></td>
 						<td><span class="calculatedValue" name="fullRoundMoveSpeedFPS" data-bound="true"></span></td>
