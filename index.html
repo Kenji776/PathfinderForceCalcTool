@@ -1,6 +1,12 @@
 <html>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<style>
+		h1, h2
+		{
+			color: #444444;
+			text-shadow: 3px 3px 3px #CCCCCC;
+			font-family: Verdana;
+		}
 		.log
 		{
 			height: 300px;
@@ -9,6 +15,9 @@
 		.logEntry
 		{
 			display:block;
+		}
+		a{
+			text-decoration:none;
 		}
 		table { 
 		color: #333;
@@ -42,6 +51,17 @@
 		tr:nth-child(odd) td { background: #FEFEFE; }  
 
 		tr td:hover { background: #666; color: #FFF; } /* Hover cell effect! */
+
+		input[type="number"] {
+		  padding: 10px;
+		  border: solid 1px #dcdcdc;
+		  transition: box-shadow 0.3s, border 0.3s;
+		}
+		input[type="number"]:focus,
+		input[type="number"].focus {
+		  border: solid 1px #707070;
+		  box-shadow: 0 0 5px 1px #969696;
+		}		
 	</style>
 	<script>
 		$( document ).ready(function(){
