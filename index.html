@@ -54,7 +54,7 @@
 		//"Aasimars have a base speed of 30 feet."
 		//http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar		
 		var baseMoveSpeedFPS = 30; 
-		
+				
 		//"Each round represents 6 seconds in the game world"
 		//http://www.d20pfsrd.com/gamemastering/combat#TOC-The-Combat-Round		
 		var secondsPerTurn = 6; //standard length of turn in pathfinder
@@ -90,9 +90,9 @@
 			
 			var forceCalcs = new Object();
 
-			forceCalcs.fullRoundMoveSpeedFPS = (baseMoveSpeedFPS / secondsPerTurn) * runMultiplier;  
+			forceCalcs.fullRoundMoveSpeedFPS = ( (baseMoveSpeedFPS + additionalHasteSpeed) / secondsPerTurn) * runMultiplier;  
 			
-			writeLogEntry('Calculated Base Feet Per Second as (base move speed fps / seconds per turn) * run multiplier: (' + baseMoveSpeedFPS + ' / ' + secondsPerTurn + ') * ' + runMultiplier + ' = ' + forceCalcs.fullRoundMoveSpeedFPS); 
+			writeLogEntry('Calculated Base Feet Per Second as (base move speed fps + haste speed bonus / seconds per turn) * run multiplier: ((' + baseMoveSpeedFPS + ' + ' + additionalHasteSpeed + ') / ' + secondsPerTurn + ') * ' + runMultiplier + ' = ' + forceCalcs.fullRoundMoveSpeedFPS); 
 			
 			forceCalcs.cheetaSprintFPS = forceCalcs.fullRoundMoveSpeedFPS * cheetaSprintMultiplier; //how fast char is going in feet per second if cheeta sprinting
 			
@@ -177,7 +177,7 @@
 				</thead>
 				<tr>
 					<td>
-						<label for="baseMoveSpeedFPS">Base Move Speed (Feet in a turn)</label>
+						<label for="baseMoveSpeedFPS">Base Move Speed (feet in a turn)</label>
 					</td>
 					<td>
 						<input name="baseMoveSpeedFPS" data-bound="true" type="number">
@@ -188,7 +188,7 @@
 					<td>
 						<a href="http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar">http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar</a>	
 					</td>
-				</tr>
+				</tr>			
 				<tr>
 					<td>				
 						<label for="secondsPerTurn">Seconds Per Turn</label>
@@ -217,7 +217,20 @@
 						<a href="http://www.d20pfsrd.com/gamemastering/combat#TOC-Run">http://www.d20pfsrd.com/gamemastering/combat#TOC-Run</a>	
 					</td>					
 				</tr>	
-
+				<tr>
+					<td>
+						<label for="additionalHasteSpeed">Additional Haste Speed (feet in a turn)</label>
+					</td>
+					<td>
+						<input name="additionalHasteSpeed" data-bound="true" type="number">
+					</td>
+					<td>
+						All of the hasted creature's modes of movement (including land movement, burrow, climb, fly, and swim) increase by 30 feet, to a maximum of twice the subject's normal speed using that form of movement. 
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/magic/all-spells/h/haste">http://www.d20pfsrd.com/magic/all-spells/h/haste</a>	
+					</td>
+				</tr>	
 				<tr>
 					<td>
 						<label for="cheetaSprintMultiplier">Cheetah Sprint Multiplier</label>
