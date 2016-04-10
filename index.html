@@ -1,0 +1,233 @@
+<html>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<style>
+		.log
+		{
+			height: 300px;
+			overflow:scroll;
+		}
+		.logEntry
+		{
+			display:block;
+		}
+	</style>
+	<script>
+		$( document ).ready(function(){
+			$('input[data-bound="true"]').each(function(){
+				var boundVar = $(this).attr('name');
+				
+				$(this).val(parseFloat(window[boundVar].toPrecision(4)));
+				
+				
+				$(this).keyup(function(){
+					var boundVar = $(this).attr('name');
+					
+					window[boundVar] = parseFloat($(this).val());
+					
+					runCalcs();
+				});
+			});
+			
+			runCalcs();
+		})
+		//FPS = Feet Per Second, unit of speed
+		//LB = Pounds, unit of weight
+		
+		//Calculation Params
+		
+		////"Aasimars have a base speed of 30 feet."
+		//http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar		
+		var baseMoveSpeedFPS = 30; 
+		
+		//"Each round represents 6 seconds in the game world"
+		//http://www.d20pfsrd.com/gamemastering/combat#TOC-The-Combat-Round		
+		var secondsPerTurn = 6; //standard length of turn in pathfinder
+
+		//If you take a charge or run action before the end of your turn, you can move a total distance of up to 10 times your base land speed
+		//http://www.d20pfsrd.com/magic/all-spells/c/cheetah-s-sprint
+		var cheetaSprintMultiplier = 10; //ability makes character move this many times faster than they normally would
+		
+		//"You can run as a full-round action.  When you run, you can move up to four times your speed in a straight line"
+		//"http://www.d20pfsrd.com/gamemastering/combat#TOC-Run"
+		var runMultiplier = 4;
+		
+		//http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar
+		var baseCharWeightLB = 125; //weight of my char
+		var charGearWeightLB = 72; //weight of my gear
+		
+		var tntToJoules = 0.00000000024; //one joule contains this many tons of TNT worth of energy
+		var poundsInTon = 2000; //i all the above equations assumed imperial tons given the spelling
+
+		//http://www.d20pfsrd.com/magic/all-spells/e/enlarge-person
+		//"This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by 8"
+		var enlargeWeightMultiplier = 8;
+			
+		function runCalcs()
+		{
+			$('#log').html(null);
+			
+			writeLogEntry('Running Calculations');
+			
+			var forceCalcs = new Object();
+
+			forceCalcs.fullRoundMoveSpeedFPS = (baseMoveSpeedFPS / secondsPerTurn) * runMultiplier;  
+			
+			writeLogEntry('Calculated Full Round Move Speed as (base move speed fps / seconds per turn) * run multiplier: (' + baseMoveSpeedFPS + ' / ' + secondsPerTurn + ') * ' + runMultiplier + ' = ' + forceCalcs.fullRoundMoveSpeedFPS); 
+			
+			forceCalcs.cheetaSprintFPS = forceCalcs.fullRoundMoveSpeedFPS * cheetaSprintMultiplier; //how fast char is going in feet per second if cheeta sprinting
+			
+			writeLogEntry('Calculated Cheetah Sprint FPS as full round move speed fps * cheetah sprint multiplier: ' + forceCalcs.fullRoundMoveSpeedFPS + ' * ' + cheetaSprintMultiplier + ' = ' + forceCalcs.cheetaSprintFPS); 
+			
+			forceCalcs.cheetaSprintLimitFeet = (baseMoveSpeedFPS * cheetaSprintMultiplier); //hard limit on distance travelled given by "move a total distance of up to 10 times your base land speed"
+			
+			writeLogEntry('Calculated Cheetah Limit Feet as base move speed * cheetah sprint multiplier: ' + baseMoveSpeedFPS + ' * ' + cheetaSprintMultiplier + ' = ' + forceCalcs.cheetaSprintLimitFeet); 
+			
+			forceCalcs.cheetaSprintCalculatedFeet = forceCalcs.cheetaSprintFPS * secondsPerTurn; //potential distance if not limited by "move a total distance of up to 10 times your base land speed"
+			
+			writeLogEntry('Calculated theoretical cheetah sprint feet (non limited) as cheetah sprint fps * seconds per turn: ' + forceCalcs.cheetaSprintFPS + ' * ' + secondsPerTurn + ' = ' + forceCalcs.cheetaSprintCalculatedFeet);
+			
+			//speed cannot be higher than 10 times base land speed. Use ternary logic to figure out if we have to use the theoretical cap, or the calculated distance
+			forceCalcs.finalDistance = forceCalcs.cheetaSprintCalculatedFeet > forceCalcs.cheetaSprintLimitFeet ? forceCalcs.cheetaSprintLimitFeet : forceCalcs.cheetaSprintCalculatedFeet; // value = [conditional test] ? [value if true] : [value if false]
+			
+			writeLogEntry('Final distance is either theoretical cheetah sprint distance or cheetah sprint limit, whichever is smaller: ' + forceCalcs.finalDistance);
+			
+			//our given speed is still in full turn numbers (6 seconds). So convert it to feet per second
+			forceCalcs.finalFPS = forceCalcs.finalDistance / secondsPerTurn;
+			
+			writeLogEntry('Final Feet Per Second was calulcated as final distance / seconds per turn: ' + forceCalcs.finalDistance + ' / ' + secondsPerTurn + ' = ' + forceCalcs.finalFPS);
+			
+			forceCalcs.totalCharWeightLb = (baseCharWeightLB + charGearWeightLB) * enlargeWeightMultiplier; //when enlarged weight of char and gear are multiplied by enlargeWeightMultiplier
+		
+			writeLogEntry('Total character weight calculated as (base char weight + char gear weight) * enlarge multiplier: (' + baseCharWeightLB + ' / ' + charGearWeightLB + ') * ' + enlargeWeightMultiplier + ' = ' + forceCalcs.totalCharWeightLb);
+			
+			//"The net force on an object is equal to the mass of the object multiplied by the acceleration of the object."
+			//http://zonalandeducation.com/mstm/physics/mechanics/forces/newton/mightyFEqMA/mightyFEqMA.html			
+			forceCalcs.forceInFootPounds = 0.5 * forceCalcs.totalCharWeightLb * Math.pow(forceCalcs.finalFPS,2); //Kinetic Energy = 0.5 X mass • speed ^ 2	
+
+			writeLogEntry('Force in foot pounds calculated as 0.5 * total char weight * final feet per second squared: 0.5 * ' + forceCalcs.totalCharWeightLb + ' * ' + forceCalcs.finalFPS + '^2 = ' + forceCalcs.forceInFootPounds);
+			
+			forceCalcs.forceInJoules = 1.35581795 * forceCalcs.forceInFootPounds//1.35581795 × Eft-lb = EJ (there is 1.35581795 joules in one foot pound of force )			
+			
+			writeLogEntry('Force in joules calculated as 1.35581795 * force in foot pounds: 1.35581795 * ' + forceCalcs.forceInFootPounds + ' = ' + forceCalcs.forceInJoules);
+			
+			forceCalcs.forceInTonsOfTNT = forceCalcs.forceInJoules * tntToJoules; //to get the amount of force in TNT multiple them together	
+
+			writeLogEntry('Force in tons of TNT calculated as force in joules * tons of tnt in one joule: ' + forceCalcs.forceInTonsOfTNT + ' * ' + tntToJoules + ' = ' + forceCalcs.forceInTonsOfTNT);			
+			
+			forceCalcs.forceInPoundsOfTNT = forceCalcs.forceInTonsOfTNT * poundsInTon; //amount of energy given in pounds of TNT	
+			
+			writeLogEntry('Force in pounds of TNT calculated as force in tons of TNT * pounds in a ton: ' + forceCalcs.forceInTonsOfTNT + ' * ' + poundsInTon + ' = ' + forceCalcs.forceInPoundsOfTNT);
+
+			html = '';
+			for(key in forceCalcs)
+			{
+				html += '<tr><td><label for="'+key+'">'+key+'</label></td><td><span class="calculatedValue">'+forceCalcs[key]+'</td></tr>'
+			}
+			
+			$('#calculatedOutputs').html(html);
+		}
+		
+		function writeLogEntry(text)
+		{
+			$('#log').append('<span class="logEntry">'+text+'</span>');
+		}
+	</script>
+	
+	<body>
+		<center><h1>Pathfinder Erigdush Force Calculator</h1></center>
+		<div id="inputs">
+			<h2>Variable Inputs</h2>
+			<table border="1">
+				<tr>
+					<td>
+						<label for="baseMoveSpeedFPS">Base Move Speed (Feet in a turn)</label>
+					</td>
+					<td>
+						<input name="baseMoveSpeedFPS" data-bound="true">
+					</td>
+				</tr>
+				<tr>
+					<td>				
+						<label for="secondsPerTurn">Seconds Per Turn</label>
+					</td>
+					<td>
+						<input name="secondsPerTurn" data-bound="true">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="runMultiplier">Run Multiplier (base speed multiplier while running)</label>
+					</td>
+					<td>
+						<input name="runMultiplier" data-bound="true">
+					</td>
+				</tr>	
+
+				<tr>
+					<td>
+						<label for="cheetaSprintMultiplier">Cheetah Sprint Multiplier</label>
+					</td>
+					<td>
+						<input name="cheetaSprintMultiplier" data-bound="true">
+					</td>
+				</tr>	
+				<tr>
+					<td>
+						<label for="baseCharWeightLB">Base Character Weight in Pounds</label>
+					</td>
+					<td>
+						<input name="baseCharWeightLB" data-bound="true">
+					</td>
+				</tr>				
+				<tr>
+					<td>
+						<label for="charGearWeightLB">Character Gear Weight</label>
+					</td>
+					<td>
+						<input name="charGearWeightLB" data-bound="true">
+					</td>
+				</tr>			
+				<tr>
+					<td>
+						<label for="enlargeWeightMultiplier">Enlarge Weight Multiplier</label>
+					</td>
+					<td>
+						<input name="enlargeWeightMultiplier" data-bound="true">
+					</td>
+				</tr>	
+				<tr>
+					<td>
+						<label for="tntToJoules">Tons of TNT in one Joule</label>
+					</td>
+					<td>
+						<input name="tntToJoules" data-bound="true" readonly="true">
+					</td>
+				</tr>	
+				<tr>
+					<td>
+						<label for="poundsInTon">Pounds in a Ton</label>
+					</td>
+					<td>
+						<input name="poundsInTon" data-bound="true" readonly="true">
+					</td>
+				</tr>					
+			</table>
+		</div>
+		
+		
+		<div id="outputs">
+			<h2>Energy Calculations</h2>
+			<table border="1" id="calculatedOutputs">
+		
+			</table>			
+		</div>
+		
+		
+		<div id="calculationLog">
+			<h2>Calculation Log</h2>
+			
+			<div id="log"></div>
+		</div>
+		
+	</body>
+</html>
