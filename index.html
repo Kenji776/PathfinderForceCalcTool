@@ -19,7 +19,7 @@
 				$(this).val(parseFloat(window[boundVar].toPrecision(4)));
 				
 				
-				$(this).keyup(function(){
+				$(this).bind('keyup change',function(){
 					var boundVar = $(this).attr('name');
 					
 					window[boundVar] = parseFloat($(this).val());
