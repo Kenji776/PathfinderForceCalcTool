@@ -13,7 +13,7 @@
 	</style>
 	<script>
 		$( document ).ready(function(){
-			$('input[data-bound="true"]').each(function(){
+			$('input[data-bound="true"][type="number"]').each(function(){
 				var boundVar = $(this).attr('name');
 				
 				$(this).val(parseFloat(window[boundVar].toPrecision(4)));
@@ -27,6 +27,21 @@
 					runCalcs();
 				});
 			});
+
+			$('input[data-bound="true"][type="checkbox"]').each(function(){
+				var boundVar = $(this).attr('name');
+				
+				$(this).prop('checked',boundVar);
+				
+				
+				$(this).click(function(){
+					var boundVar = $(this).attr('name');
+					
+					window[boundVar] = $(this).is(":checked");
+					
+					runCalcs();
+				});
+			});
 			
 			runCalcs();
 		})
@@ -34,6 +49,7 @@
 		//LB = Pounds, unit of weight
 		
 		//Calculation Params
+		var limitSprintDistance = true;
 		
 		////"Aasimars have a base speed of 30 feet."
 		//http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar		
@@ -86,8 +102,17 @@
 			
 			writeLogEntry('Calculated theoretical cheetah sprint feet (non limited) as cheetah sprint fps * seconds per turn: ' + forceCalcs.cheetaSprintFPS + ' * ' + secondsPerTurn + ' = ' + forceCalcs.cheetaSprintCalculatedFeet);
 			
-			//speed cannot be higher than 10 times base land speed. Use ternary logic to figure out if we have to use the theoretical cap, or the calculated distance
-			forceCalcs.finalDistance = forceCalcs.cheetaSprintCalculatedFeet > forceCalcs.cheetaSprintLimitFeet ? forceCalcs.cheetaSprintLimitFeet : forceCalcs.cheetaSprintCalculatedFeet; // value = [conditional test] ? [value if true] : [value if false]
+			if(limitSprintDistance)
+			{	
+				writeLogEntry('Sprint distance is limited. Applying limit');
+				//speed cannot be higher than 10 times base land speed. Use ternary logic to figure out if we have to use the theoretical cap, or the calculated distance
+				forceCalcs.finalDistance = forceCalcs.cheetaSprintCalculatedFeet > forceCalcs.cheetaSprintLimitFeet ? forceCalcs.cheetaSprintLimitFeet : forceCalcs.cheetaSprintCalculatedFeet; // value = [conditional test] ? [value if true] : [value if false]
+			}
+			else
+			{
+				writeLogEntry('Sprint distance is not limited. Setting final distance equal to theoretical max');
+				forceCalcs.finalDistance = forceCalcs.cheetaSprintCalculatedFeet;
+			}
 			
 			writeLogEntry('Final distance is either theoretical cheetah sprint distance or cheetah sprint limit, whichever is smaller: ' + forceCalcs.finalDistance);
 			
@@ -143,7 +168,7 @@
 						<label for="baseMoveSpeedFPS">Base Move Speed (Feet in a turn)</label>
 					</td>
 					<td>
-						<input name="baseMoveSpeedFPS" data-bound="true">
+						<input name="baseMoveSpeedFPS" data-bound="true" type="number">
 					</td>
 				</tr>
 				<tr>
@@ -151,7 +176,7 @@
 						<label for="secondsPerTurn">Seconds Per Turn</label>
 					</td>
 					<td>
-						<input name="secondsPerTurn" data-bound="true">
+						<input name="secondsPerTurn" data-bound="true" type="number">
 					</td>
 				</tr>
 				<tr>
@@ -159,7 +184,7 @@
 						<label for="runMultiplier">Run Multiplier (base speed multiplier while running)</label>
 					</td>
 					<td>
-						<input name="runMultiplier" data-bound="true">
+						<input name="runMultiplier" data-bound="true" type="number">
 					</td>
 				</tr>	
 
@@ -168,7 +193,7 @@
 						<label for="cheetaSprintMultiplier">Cheetah Sprint Multiplier</label>
 					</td>
 					<td>
-						<input name="cheetaSprintMultiplier" data-bound="true">
+						<input name="cheetaSprintMultiplier" data-bound="true" type="number">
 					</td>
 				</tr>	
 				<tr>
@@ -176,7 +201,7 @@
 						<label for="baseCharWeightLB">Base Character Weight in Pounds</label>
 					</td>
 					<td>
-						<input name="baseCharWeightLB" data-bound="true">
+						<input name="baseCharWeightLB" data-bound="true" type="number">
 					</td>
 				</tr>				
 				<tr>
@@ -184,7 +209,7 @@
 						<label for="charGearWeightLB">Character Gear Weight</label>
 					</td>
 					<td>
-						<input name="charGearWeightLB" data-bound="true">
+						<input name="charGearWeightLB" data-bound="true" type="number">
 					</td>
 				</tr>			
 				<tr>
@@ -192,15 +217,23 @@
 						<label for="enlargeWeightMultiplier">Enlarge Weight Multiplier</label>
 					</td>
 					<td>
-						<input name="enlargeWeightMultiplier" data-bound="true">
+						<input name="enlargeWeightMultiplier" data-bound="true" type="number">
 					</td>
 				</tr>	
+				<tr>
+					<td>
+						<label for="limitSprintDistance">Limit Sprint Distance?</label>
+					</td>
+					<td>
+						<input name="limitSprintDistance" type="checkbox" data-bound="true">
+					</td>
+				</tr>
 				<tr>
 					<td>
 						<label for="tntToJoules">Tons of TNT in one Joule</label>
 					</td>
 					<td>
-						<input name="tntToJoules" data-bound="true" readonly="true">
+						<input name="tntToJoules" data-bound="true" type="number" readonly="true">
 					</td>
 				</tr>	
 				<tr>
@@ -208,9 +241,10 @@
 						<label for="poundsInTon">Pounds in a Ton</label>
 					</td>
 					<td>
-						<input name="poundsInTon" data-bound="true" readonly="true">
+						<input name="poundsInTon" data-bound="true" type="number" readonly="true">
 					</td>
-				</tr>					
+				</tr>
+				
 			</table>
 		</div>
 		
