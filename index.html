@@ -203,7 +203,7 @@
 			
 			writeLogEntry('Meters per second calculated as final feet per second * 0.3048: ' + forceCalcs.finalFPS + ' * 0.3048 ' + ' = ' + forceCalcs.metersPerSecond);
 			
-			forceCalcs.kineticEnergy = 0.5 * forceCalcs.calculatedMass * Math.pow(forceCalcs.metersPerSecond,2);
+			forceCalcs.kineticEnergy = 0.5 * (forceCalcs.calculatedMass * Math.pow(forceCalcs.metersPerSecond,2));
 
 			writeLogEntry('Kinetic Energy (Joules) calculated as 0.5 * calculated mass * meters per second squared: 0.5 * ' + forceCalcs.calculatedMass + ' * ' + forceCalcs.metersPerSecond + '^2 = ' + forceCalcs.kineticEnergy);
 
