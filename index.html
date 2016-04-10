@@ -203,6 +203,10 @@
 			
 			writeLogEntry('Meters per second calculated as final feet per second * 0.3048: ' + forceCalcs.finalFPS + ' * 0.3048 ' + ' = ' + forceCalcs.metersPerSecond);
 			
+			forceCalcs.forceInNewtons = forceCalcs.totalCharWeightKg * forceCalcs.metersPerSecond;
+			
+			writeLogEntry('Calculated force as chat weight in kg * meters per second: ' + forceCalcs.totalCharWeightKg + ' * ' +  forceCalcs.metersPerSecond + ' = ' + forceCalcs.forceInNewtons);
+			
 			forceCalcs.kineticEnergy = 0.5 * (forceCalcs.calculatedMass * Math.pow(forceCalcs.metersPerSecond,2));
 
 			writeLogEntry('Kinetic Energy (Joules) calculated as 0.5 * calculated mass * meters per second squared: 0.5 * ' + forceCalcs.calculatedMass + ' * ' + forceCalcs.metersPerSecond + '^2 = ' + forceCalcs.kineticEnergy);
@@ -525,7 +529,13 @@
 						<td><span class="calculatedValue" name="metersPerSecond" data-bound="true"></span></td>
 						<td>Meters Per Second</td>
 						<td>Speed of character in meters per second</td>
-					</tr>					
+					</tr>			
+					<tr>
+						<td><label for="forceInNewtons">Force</label></td>
+						<td><span class="calculatedValue" name="forceInNewtons" data-bound="true"></span></td>
+						<td>Newtons</td>
+						<td>Amount of force in newtons</td>
+					</tr>				
 					<tr>
 						<td><label for="kineticEnergy">Kinetic Energy (Joules / Newton Meters)</label></td>
 						<td><span class="calculatedValue" name="kineticEnergy" data-bound="true"></span></td>
