@@ -119,9 +119,9 @@
 		//http://www.d20pfsrd.com/magic/all-spells/c/cheetah-s-sprint
 		var cheetaSprintMultiplier = 10; //ability makes character move this many times faster than they normally would
 		
-		//"You can run as a full-round action.  When you run, you can move up to four times your speed in a straight line"
+		//"You can run as a full-round action.  When you run, you can move up to four times your speed in a straight line" (defaulted to 1 because cheetah sprint replaces this, doesn't add to it).
 		//"http://www.d20pfsrd.com/gamemastering/combat#TOC-Run"
-		var runMultiplier = 4;
+		var runMultiplier = 1;
 		
 		//http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar
 		var baseCharWeightLB = 125; //weight of my char
@@ -262,7 +262,7 @@
 						<input name="runMultiplier" data-bound="true" type="number">
 					</td>
 					<td>
-						You can run as a full-round action.  When you run, you can move up to four times your speed in a straight line
+						You can run as a full-round action.  When you run, you can move up to four times your speed in a straight line (defaulted to 1 because cheetah sprint replaces this, doesn't add to it)
 					</td>
 					<td>
 						<a href="http://www.d20pfsrd.com/gamemastering/combat#TOC-Run">http://www.d20pfsrd.com/gamemastering/combat#TOC-Run</a>	
