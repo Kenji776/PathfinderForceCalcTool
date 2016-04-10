@@ -51,7 +51,7 @@
 		//Calculation Params
 		var limitSprintDistance = true;
 		
-		////"Aasimars have a base speed of 30 feet."
+		//"Aasimars have a base speed of 30 feet."
 		//http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar		
 		var baseMoveSpeedFPS = 30; 
 		
@@ -59,6 +59,10 @@
 		//http://www.d20pfsrd.com/gamemastering/combat#TOC-The-Combat-Round		
 		var secondsPerTurn = 6; //standard length of turn in pathfinder
 
+		//All of the hasted creature's modes of movement (including land movement, burrow, climb, fly, and swim) increase by 30 feet, to a maximum of twice the subject's normal speed using that form of movement.
+		//http://www.d20pfsrd.com/magic/all-spells/h/haste
+		var additionalHasteSpeed = 30;
+		
 		//If you take a charge or run action before the end of your turn, you can move a total distance of up to 10 times your base land speed
 		//http://www.d20pfsrd.com/magic/all-spells/c/cheetah-s-sprint
 		var cheetaSprintMultiplier = 10; //ability makes character move this many times faster than they normally would
@@ -163,12 +167,26 @@
 		<div id="inputs">
 			<h2>Variable Inputs</h2>
 			<table border="1">
+				<thead>
+					<tr>
+						<th>Variable</th>
+						<th>Value</th>
+						<th>Explanation</th>
+						<th>Ref (if available)</th>
+					</tr>
+				</thead>
 				<tr>
 					<td>
 						<label for="baseMoveSpeedFPS">Base Move Speed (Feet in a turn)</label>
 					</td>
 					<td>
 						<input name="baseMoveSpeedFPS" data-bound="true" type="number">
+					</td>
+					<td>
+						Aasimars have a base speed of 30 feet.
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar">http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar</a>	
 					</td>
 				</tr>
 				<tr>
@@ -178,6 +196,12 @@
 					<td>
 						<input name="secondsPerTurn" data-bound="true" type="number">
 					</td>
+					<td>
+						Each round represents 6 seconds in the game world
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/gamemastering/combat#TOC-The-Combat-Round">http://www.d20pfsrd.com/gamemastering/combat#TOC-The-Combat-Round	</a>	
+					</td>				
 				</tr>
 				<tr>
 					<td>
@@ -186,6 +210,12 @@
 					<td>
 						<input name="runMultiplier" data-bound="true" type="number">
 					</td>
+					<td>
+						You can run as a full-round action.  When you run, you can move up to four times your speed in a straight line
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/gamemastering/combat#TOC-Run">http://www.d20pfsrd.com/gamemastering/combat#TOC-Run</a>	
+					</td>					
 				</tr>	
 
 				<tr>
@@ -195,6 +225,12 @@
 					<td>
 						<input name="cheetaSprintMultiplier" data-bound="true" type="number">
 					</td>
+					<td>
+						If you take a charge or run action before the end of your turn, you can move a total distance of up to 10 times your base land speed
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/magic/all-spells/c/cheetah-s-sprint">http://www.d20pfsrd.com/magic/all-spells/c/cheetah-s-sprint</a>	
+					</td>					
 				</tr>	
 				<tr>
 					<td>
@@ -203,6 +239,12 @@
 					<td>
 						<input name="baseCharWeightLB" data-bound="true" type="number">
 					</td>
+					<td>
+						Base weight is 110Lb. My char rolled a modifier of 15 for a total of 125.
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar">http://www.d20pfsrd.com/races/other-races/featured-races/arg-aasimar</a>	
+					</td>				
 				</tr>				
 				<tr>
 					<td>
@@ -210,6 +252,12 @@
 					</td>
 					<td>
 						<input name="charGearWeightLB" data-bound="true" type="number">
+					</td>
+					<td>
+						Weight of all gear the character is carrying
+					</td>
+					<td>
+						N/A
 					</td>
 				</tr>			
 				<tr>
@@ -219,6 +267,12 @@
 					<td>
 						<input name="enlargeWeightMultiplier" data-bound="true" type="number">
 					</td>
+					<td>
+						This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/magic/all-spells/e/enlarge-person">http://www.d20pfsrd.com/magic/all-spells/e/enlarge-person</a>	
+					</td>					
 				</tr>	
 				<tr>
 					<td>
@@ -226,6 +280,12 @@
 					</td>
 					<td>
 						<input name="limitSprintDistance" type="checkbox" data-bound="true">
+					</td>
+					<td>
+						Apply limit indicated by "If you take a charge or run action before the end of your turn, you can move a total distance of up to 10 times your base land speed.".
+					</td>
+					<td>
+						<a href="http://www.d20pfsrd.com/magic/all-spells/c/cheetah-s-sprint">http://www.d20pfsrd.com/magic/all-spells/c/cheetah-s-sprint</a>
 					</td>
 				</tr>
 				<tr>
@@ -235,6 +295,13 @@
 					<td>
 						<input name="tntToJoules" data-bound="true" type="number" readonly="true">
 					</td>
+					<td>
+						There is 0.00000000024 tons of TNT in one Joule. This is a constant and should never need to be changed.
+					</td>
+					<td>
+						<a href="http://convert-to.com/conversion/energy/convert-j-to-tn.html">http://convert-to.com/conversion/energy/convert-j-to-tn.html</a>
+					
+					</td>
 				</tr>	
 				<tr>
 					<td>
@@ -242,6 +309,9 @@
 					</td>
 					<td>
 						<input name="poundsInTon" data-bound="true" type="number" readonly="true">
+					</td>
+					<td>
+						This is a constant and should never need to be changed.
 					</td>
 				</tr>
 				
