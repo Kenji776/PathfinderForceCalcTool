@@ -203,11 +203,7 @@
 			
 			writeLogEntry('Meters per second calculated as final feet per second * 0.3048: ' + forceCalcs.finalFPS + ' * 0.3048 ' + ' = ' + forceCalcs.metersPerSecond);
 			
-			forceCalcs.weightInNewtons = forceCalcs.calculatedMass * gravitationalAcceleration;
-			
-			writeLogEntry('weight in newtons calculated as mass * gravity: ' +  forceCalcs.calculatedMass + ' * ' + gravitationalAcceleration +  ' = ' + forceCalcs.weightInNewtons);
-			
-			forceCalcs.kineticEnergy = 0.5 * (forceCalcs.weightInNewtons * Math.pow(forceCalcs.metersPerSecond,2));
+			forceCalcs.kineticEnergy = 0.5 * (forceCalcs.calculatedMass * Math.pow(forceCalcs.metersPerSecond,2));
 
 			writeLogEntry('Kinetic Energy (Joules) calculated as 0.5 * calculated mass * meters per second squared: 0.5 * ' + forceCalcs.calculatedMass + ' * ' + forceCalcs.metersPerSecond + '^2 = ' + forceCalcs.kineticEnergy);
 
@@ -523,13 +519,7 @@
 						<td><span class="calculatedValue" name="calculatedMass" data-bound="true"></span></td>
 						<td>Kg</td>
 						<td>Calculated mass of character using provided gravity and weight</td>
-					</tr>	
-					<tr>
-						<td><label for="weightInNewtons">Total Character Weight in Newtons</label></td>
-						<td><span class="weightInNewtons" name="calculatedMass" data-bound="true"></span></td>
-						<td>Newtons</td>
-						<td>Calculated weight in newtons. Used for Kinetic energy calculation</td>
-					</tr>					
+					</tr>						
 					<tr>
 						<td><label for="metersPerSecond">Meters Per Second</label></td>
 						<td><span class="calculatedValue" name="metersPerSecond" data-bound="true"></span></td>
